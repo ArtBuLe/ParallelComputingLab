@@ -14,7 +14,7 @@ public static class Calculator
             // TODO 1. Измените условие отбора:
             // вместо чисел, делящихся на 7,
             // выбирайте числа, которые делятся на 13.
-            if (number % 7 == 0)
+            if (number % 13 == 0)
             {
                 sum += number;
                 count++;
