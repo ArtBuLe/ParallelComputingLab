@@ -10,6 +10,9 @@ internal class Program
         RunCustomTest("Один подходящий элемент (13)", new[] { 13 });
         RunCustomTest("Один неподходящий элемент (14)", new[] { 14 });
 
+        // TODO 4: Проверка пустого массива
+        RunCustomTest("Пустой массив", new int[0]);
+
         int[] numbers =
         DataGenerator.Generate(
             size: 1_000_000,
