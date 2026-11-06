@@ -27,6 +27,18 @@ internal class Program
             Console.WriteLine("которая предотвращает падение с NullReferenceException глубже в коде.");
         }
 
+        // TODO 6:
+        Console.WriteLine("\n--- Демонстрация CalculateParallelWrong ---");
+        int[] largeArray = DataGenerator.Generate(size: 5_000_000, seed: 42);
+
+        var wrongResult = Calculator.CalculateParallelWrong(largeArray);
+        var correctResult = Calculator.CalculateParallel(largeArray);
+
+        Console.WriteLine($"Правильный результат: Сумма = {correctResult.Sum}, Кол-во = {correctResult.Count}");
+        Console.WriteLine($"Неправильный результат:      Сумма = {wrongResult.Sum}, Кол-во = {wrongResult.Count}");
+        Console.WriteLine($"Совпадение: {wrongResult.Sum == correctResult.Sum && wrongResult.Count == correctResult.Count}");
+
+
         int[] numbers =
         DataGenerator.Generate(
             size: 1_000_000,

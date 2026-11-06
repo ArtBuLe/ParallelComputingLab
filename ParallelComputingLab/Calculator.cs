@@ -104,4 +104,24 @@ public static class Calculator
 
         return new CalculationResult(sum, count, max);
     }
+
+    // TODO 6:
+    public static CalculationResult CalculateParallelWrong(int[] numbers)
+    {
+        ArgumentNullException.ThrowIfNull(numbers);
+
+        long sum = 0;
+        int count = 0;
+
+        Parallel.For(0, numbers.Length, i =>
+        {
+            if (numbers[i] % 13 == 0)
+            {
+                sum += numbers[i];
+                count++;
+            }
+        });
+
+        return new CalculationResult(sum, count, null);
+    }
 }
