@@ -42,14 +42,11 @@ public static class BenchmarkRunner
             parallelTimes.Add(parallel.ElapsedMilliseconds);
         }
 
-        Console.WriteLine(
-            $"Сумма:           {expectedResult!.Sum:N0}");
-        Console.WriteLine(
-            $"Количество:      {expectedResult.Count:N0}");
-        Console.WriteLine(
-            $"Последовательно: {Median(sequentialTimes):F3} мс");
-        Console.WriteLine(
-            $"Параллельно:     {Median(parallelTimes):F3} мс");
+        Console.WriteLine($"Сумма:           {expectedResult!.Sum:N0}");
+        Console.WriteLine($"Количество:      {expectedResult.Count:N0}");
+        Console.WriteLine($"Максимум:        {expectedResult.Max}"); // TODO 2
+        Console.WriteLine($"Последовательно: {Median(sequentialTimes):F3} мс");
+        Console.WriteLine($"Параллельно:     {Median(parallelTimes):F3} мс");
     }
 
     public static (CalculationResult Result, double ElapsedMilliseconds)

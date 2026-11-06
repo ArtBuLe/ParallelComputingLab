@@ -8,6 +8,7 @@ public static class Calculator
 
         long sum = 0;
         int count = 0;
+        int? max = null; // TODO 2
 
         foreach (int number in numbers)
         {
@@ -18,15 +19,24 @@ public static class Calculator
             {
                 sum += number;
                 count++;
+
+                // TODO 2. Добавьте вычисление максимального
+                // подходящего элемента.
+                if (max == null || number > max)
+                {
+                    max = number;
+                }
             }
         }
 
-        return new CalculationResult(sum, count);
+        return new CalculationResult(sum, count, max);
     }
 
-    public static CalculationResult CalculateParallel(
+    public static CalculationResult CalculateParallel
+        (
         int[] numbers,
-        int maxDegreeOfParallelism = -1)
+        int maxDegreeOfParallelism = -1
+        )
     {
         ArgumentNullException.ThrowIfNull(numbers);
 
@@ -39,6 +49,9 @@ public static class Calculator
 
         long sum = 0;
         int count = 0;
+        int? max = null;
+
+        object maxLock = new();
 
         var options = new ParallelOptions
         {
@@ -49,15 +62,25 @@ public static class Calculator
             0,
             numbers.Length,
             options,
-            () => (LocalSum: 0L, LocalCount: 0),
+            () => (LocalSum: 0L, LocalCount: 0, LocalMax: (int?)null),
             (i, state, local) =>
             {
                 int number = numbers[i];
 
-                if (number % 7 == 0)
+                // TODO 1. Измените условие отбора:
+                // вместо чисел, делящихся на 7,
+                // выбирайте числа, которые делятся на 13.
+                if (number % 13 == 0)
                 {
                     local.LocalSum += number;
                     local.LocalCount++;
+
+                    // TODO 2. Добавьте вычисление максимального
+                    // подходящего элемента.
+                    if (max == null || number > max)
+                    {
+                        max = number;
+                    }
                 }
 
                 return local;
@@ -66,8 +89,19 @@ public static class Calculator
             {
                 Interlocked.Add(ref sum, local.LocalSum);
                 Interlocked.Add(ref count, local.LocalCount);
+
+                if (local.LocalMax != null)
+                {
+                    lock (maxLock)
+                    {
+                        if (max == null || local.LocalMax > max)
+                        {
+                            max = local.LocalMax;
+                        }
+                    }
+                }
             });
 
-        return new CalculationResult(sum, count);
+        return new CalculationResult(sum, count, max);
     }
 }
