@@ -13,6 +13,20 @@ internal class Program
         // TODO 4: Проверка пустого массива
         RunCustomTest("Пустой массив", new int[0]);
 
+        // TODO 5: Проверка null
+        Console.WriteLine("\n--- Тест null ---");
+        try
+        {
+            Calculator.CalculateSequential(null);
+        }
+        catch (ArgumentNullException ex)
+        {
+            Console.WriteLine($"Ожидаемое исключение поймано: {ex.GetType().Name}");
+            Console.WriteLine("Объяснение: Метод содержит ArgumentNullException.ThrowIfNull(numbers);");
+            Console.WriteLine("Это стандартная и правильная практика валидации входных параметров в .NET,");
+            Console.WriteLine("которая предотвращает падение с NullReferenceException глубже в коде.");
+        }
+
         int[] numbers =
         DataGenerator.Generate(
             size: 1_000_000,
