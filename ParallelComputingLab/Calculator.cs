@@ -105,23 +105,53 @@ public static class Calculator
         return new CalculationResult(sum, count, max);
     }
 
-    // TODO 6:
+    // TODO 7:
     public static CalculationResult CalculateParallelWrong(int[] numbers)
     {
         ArgumentNullException.ThrowIfNull(numbers);
 
         long sum = 0;
         int count = 0;
+        int? maxValue = null;
+        object maxLock = new object();
 
-        Parallel.For(0, numbers.Length, i =>
-        {
-            if (numbers[i] % 13 == 0)
+        Parallel.For(
+            0,
+            numbers.Length,
+            () => (LocalSum: 0L, LocalCount: 0, LocalMax: (int?)null),
+            (i, state, local) =>
             {
-                sum += numbers[i];
-                count++;
-            }
-        });
+                int number = numbers[i];
 
-        return new CalculationResult(sum, count, null);
+                if (number % 13 == 0)
+                {
+                    local.LocalSum += number;
+                    local.LocalCount++;
+                    if (local.LocalMax == null || number > local.LocalMax)
+                    {
+                        local.LocalMax = number;
+                    }
+                }
+
+                return local;
+            },
+            local =>
+            {
+                Interlocked.Add(ref sum, local.LocalSum);
+                Interlocked.Add(ref count, local.LocalCount);
+
+                if (local.LocalMax != null)
+                {
+                    lock (maxLock)
+                    {
+                        if (maxValue == null || local.LocalMax > maxValue)
+                        {
+                            maxValue = local.LocalMax;
+                        }
+                    }
+                }
+            });
+
+        return new CalculationResult(sum, count, maxValue);
     }
 }

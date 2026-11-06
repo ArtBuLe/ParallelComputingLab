@@ -38,6 +38,13 @@ internal class Program
         Console.WriteLine($"Неправильный результат:      Сумма = {wrongResult.Sum}, Кол-во = {wrongResult.Count}");
         Console.WriteLine($"Совпадение: {wrongResult.Sum == correctResult.Sum && wrongResult.Count == correctResult.Count}");
 
+        // TODO 7:
+        Console.WriteLine("\n--- Проверка исправленного CalculateParallelWrong ---");
+        var fixedWrongResult = Calculator.CalculateParallelWrong(largeArray);
+        Console.WriteLine($"Исправленный результат: Сумма = {fixedWrongResult.Sum}, Кол-во = {fixedWrongResult.Count}");
+        Console.WriteLine($"Совпадение с правильным: {fixedWrongResult.Sum == correctResult.Sum && fixedWrongResult.Count == correctResult.Count} (всегда True)");
+
+        Console.WriteLine("\nРабота завершена.");
 
         int[] numbers =
         DataGenerator.Generate(
